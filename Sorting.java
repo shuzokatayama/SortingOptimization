@@ -4,6 +4,7 @@ import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Sorting {
+
     /**
      * Sorts an array of doubles in increasing order. This method is a
      * single-threaded baseline implementation.
@@ -16,14 +17,22 @@ public class Sorting {
 
     /**
      * Sorts an array of doubles in increasing order. This method is a
-     * multi-threaded optimized sorting algorithm. For large arrays (e.g., arrays of size at least 1 million) it should be significantly faster than baselineSort.
+     * multi-threaded optimized sorting algorithm. For large arrays 
+     * (e.g., arrays of size at least 1 million) it should be significantly 
+     * faster than baselineSort.
      *
      * @param data   the array of doubles to be sorted
      */
     public static void parallelSort (double[] data) {
 
-    	// Acessing memory in right order, etc. 
-		// complete this method!
+        int nThreads = Runtime.getRuntime().availableProcessors();
+        ForkJoinPool pool = new ForkJoinPool(nThreads);
+        int maxSize = (data.length / nThreads);
+
+        SortingThread first = new SortingThread(maxSize, data, 0, (data.length-1));
+        pool.invoke(first);
+
+        System.out.println("Array sorted: "+isSorted(data));
     }
 
     /**
